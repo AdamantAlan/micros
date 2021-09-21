@@ -9,30 +9,32 @@ namespace PlatformService.Data
     public class PlatformRepo : IPlatformRepo
     {
         private readonly AppDbContext _context;
+
         public PlatformRepo(AppDbContext context)
         {
             _context = context;
         }
-        public void CreatPlatform(Platform p)
+
+        public async Task CreatPlatformAsync(Platform p)
         {
             if (p == null)
                 throw new ArgumentNullException(nameof(p));
-            _context.Platforms.Add(p);
+            await _context.Platforms.AddAsync(p);
         }
 
-        public IEnumerable<Platform> GetAllPlatforms()
+        public Task<IEnumerable<Platform>> GetAllPlatformsAsync()
         {
-            return _context.Platforms.ToList();
+            return Task.Run(() => { return _context.Platforms.AsEnumerable(); });
         }
 
-        public Platform GetPlatformById(int id)
+        public Task<Platform> GetPlatformByIdAsync(int id)
         {
-            return _context.Platforms.FirstOrDefault(p => p.Id == id);
+            return Task.Run(() => { return _context.Platforms.FirstOrDefault(p => p.Id == id); });
         }
 
-        public bool SaveChange()
+        public async Task<bool> SaveChangeAsync()
         {
-            return _context.SaveChanges() > 0;
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

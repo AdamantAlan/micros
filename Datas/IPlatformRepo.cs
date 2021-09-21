@@ -8,12 +8,12 @@ namespace PlatformService.Data
 {
     public interface IPlatformRepo
     {
-        bool SaveChange();
+        Task<bool> SaveChangeAsync();
 
-        IEnumerable<Platform> GetAllPlatforms();
+        Task<IEnumerable<Platform>> GetAllPlatformsAsync();
 
-        Platform GetPlatformById(int id);
+        Task<Platform> GetPlatformByIdAsync(int id);
 
-        void CreatPlatform(Platform p);
+        Task CreatPlatformAsync(Platform p);
     }
 }

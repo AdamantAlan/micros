@@ -23,25 +23,25 @@ namespace PlatformService.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<PlatformReadDto>> GetAllPlatform()
+        public async Task<ActionResult<IEnumerable<PlatformReadDto>>> GetAllPlatform()
         {
-            var plts = _repo.GetAllPlatforms();
+            var plts = await _repo.GetAllPlatformsAsync();
             return Ok(_mapper.Map<IEnumerable<Platform>>(plts));
         }
 
         [HttpGet("{id}", Name = "GetPlatformById")]
-        public ActionResult<PlatformReadDto> GetPlatformById(int id)
+        public async Task<ActionResult<PlatformReadDto>> GetPlatformById(int id)
         {
-            var plts = _repo.GetPlatformById(id);
+            var plts = await _repo.GetPlatformByIdAsync(id);
             return Ok(_mapper.Map<Platform>(plts));
         }
 
         [HttpPost]
-        public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto platform)
+        public async Task<ActionResult<PlatformReadDto>> CreatePlatform(PlatformCreateDto platform)
         {
             var plat = _mapper.Map<Platform>(platform);
-            _repo.CreatPlatform(plat);
-            _repo.SaveChange();
+            await _repo.CreatPlatformAsync(plat);
+            await _repo.SaveChangeAsync();
             var responce = _mapper.Map<PlatformReadDto>(plat);
             return CreatedAtRoute(nameof(GetPlatformById), new { id = plat.Id }, responce);
         }
