@@ -16,7 +16,7 @@ namespace CommandsService.Data
             _context = context;
         }
 
-        public async Task CreateCommand(int platformId, Command command)
+        public async Task CreateCommandAsync(int platformId, Command command)
         {
             if (command == null)
             {
@@ -26,7 +26,7 @@ namespace CommandsService.Data
             await _context.Commands.AddAsync(command);
         }
 
-        public async Task CreatePlatform(Platform plat)
+        public async Task CreatePlatformAsync(Platform plat)
         {
             if (plat == null)
             {
@@ -35,20 +35,23 @@ namespace CommandsService.Data
             await _context.Platforms.AddAsync(plat);
         }
 
-        public async Task<Command> GetCommand(int platformId, int commandId) => await Task.Run(() =>
+        public async Task<Command> GetCommandAsync(int platformId, int commandId) => await Task.Run(() =>
         {
             return _context.Commands.Where(c => c.PlatformId == platformId && c.Id == commandId).FirstOrDefault();
         });
 
-        public async Task<IEnumerable<Command>> GetCommandsForPlatform(int platformId) => await Task.Run(() =>
+        public async Task<IEnumerable<Command>> GetCommandsForPlatformAsync(int platformId) => await Task.Run(() =>
         {
             return _context.Commands.Where(c => c.PlatformId == platformId).OrderBy(c => c.Platform.Name);
         });
 
-        public async Task<IEnumerable<Platform>> GetAllPlatforms() => await _context.Platforms.ToListAsync();
+        public async Task<IEnumerable<Platform>> GetAllPlatformsAsync() => await _context.Platforms.ToListAsync();
 
-        public async Task<bool> PlatformExist(int platformId) => await Task.Run(() => { return _context.Platforms.Any(p => p.Id == platformId); });
+        public async Task<bool> PlatformExistAsync(int platformId) => await Task.Run(() =>
+        {
+            return _context.Platforms.Any(p => p.Id == platformId);
+        });
 
-        public async Task<bool> SaveChanges() => (await _context.SaveChangesAsync()) > 0;
+        public async Task<bool> SaveChangesAsync() => (await _context.SaveChangesAsync()) > 0;
     }
 }

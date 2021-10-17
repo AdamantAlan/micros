@@ -4,20 +4,20 @@ using System.Threading.Tasks;
 
 namespace CommandsService.Data
 {
-    interface ICommandRepo
+    public interface ICommandRepo
     {
-        Task<bool> SaveChanges();
+        Task<bool> SaveChangesAsync();
 
-        Task<IEnumerable<Platform>> GetAllPlatforms();
+        Task<IEnumerable<Platform>> GetAllPlatformsAsync();
 
-        Task CreatePlatform(Platform plat);
+        Task CreatePlatformAsync(Platform plat);
 
-        Task<bool> PlatformExist(int platformId);
+        Task<bool> PlatformExistAsync(int platformId);
 
-        Task<IEnumerable<Command>> GetCommandsForPlatform(int platformId);
+        Task<IEnumerable<Command>> GetCommandsForPlatformAsync(int platformId);
 
-        Task<Command> GetCommand(int platformId, int commandId);
+        Task<Command> GetCommandAsync(int platformId, int commandId);
 
-        Task CreateCommand(int platformId, Command command);
+        Task CreateCommandAsync(int platformId, Command command);
     }
 }
