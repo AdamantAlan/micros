@@ -35,9 +35,6 @@ namespace CommandsService.Data
             await _context.Platforms.AddAsync(plat);
         }
 
-        public async Task<IEnumerable<Platform>> GetAllPlatforms() => await _context.Platforms.ToListAsync();
-
-
         public async Task<Command> GetCommand(int platformId, int commandId) => await Task.Run(() =>
         {
             return _context.Commands.Where(c => c.PlatformId == platformId && c.Id == commandId).FirstOrDefault();
@@ -48,6 +45,7 @@ namespace CommandsService.Data
             return _context.Commands.Where(c => c.PlatformId == platformId).OrderBy(c => c.Platform.Name);
         });
 
+        public async Task<IEnumerable<Platform>> GetAllPlatforms() => await _context.Platforms.ToListAsync();
 
         public async Task<bool> PlatformExist(int platformId) => await Task.Run(() => { return _context.Platforms.Any(p => p.Id == platformId); });
 

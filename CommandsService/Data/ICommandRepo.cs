@@ -15,7 +15,9 @@ namespace CommandsService.Data
         Task<bool> PlatformExist(int platformId);
 
         Task<IEnumerable<Command>> GetCommandsForPlatform(int platformId);
+
         Task<Command> GetCommand(int platformId, int commandId);
+
         Task CreateCommand(int platformId, Command command);
     }
 }
