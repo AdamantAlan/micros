@@ -19,5 +19,7 @@ namespace CommandsService.Data
         Task<Command> GetCommandAsync(int platformId, int commandId);
 
         Task CreateCommandAsync(int platformId, Command command);
+
+        Task ExternalPlatformIdExist(int externalId);
     }
 }
