@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PlatformService.AsyncDataService;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
@@ -18,12 +19,14 @@ namespace PlatformService.Controllers
         private readonly IPlatformRepo _repo;
         private readonly IMapper _mapper;
         private readonly ICommandDataClient _commandDataClient;
+        internal IMessageBusClient _bus;
 
-        public PlatformsController(IPlatformRepo repo, IMapper mapper, ICommandDataClient commandDataClient)
+        public PlatformsController(IPlatformRepo repo, IMapper mapper, ICommandDataClient commandDataClient, IMessageBusClient bus)
         {
             _repo = repo;
             _mapper = mapper;
             _commandDataClient = commandDataClient;
+            _bus = bus;
         }
 
         [HttpGet]
@@ -48,6 +51,7 @@ namespace PlatformService.Controllers
             await _repo.SaveChangeAsync();
             var responce = _mapper.Map<PlatformReadDto>(plat);
 
+            //send sync message
             try
             {
                 await _commandDataClient.SendPlatformToCommand(responce);
@@ -57,6 +61,17 @@ namespace PlatformService.Controllers
                 Console.WriteLine($"ERROR {e.Message}");
             }
 
+            //send async message
+            try
+            {
+                var platformBusDto = _mapper.Map<PlatformPublishedDto>(responce);
+                platformBusDto.Event = "Platform_Publish";
+                _bus.PublishNewPlatform(platformBusDto);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"ERROR {e.Message}");
+            }
             return CreatedAtRoute(nameof(GetPlatformById), new { id = plat.Id }, responce);
         }
     }
